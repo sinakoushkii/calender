@@ -1,10 +1,11 @@
 import React from 'react'
+import JalaliCalender from './component/JalaliCalender'
 
 const App = () => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+   <div className='container mx-auto px-4'>
+    <JalaliCalender />
+   </div>
   )
 }
 
