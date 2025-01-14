@@ -6,19 +6,21 @@ import {
   RangePicker,
 } from "jalaali-react-date-picker";
 import Jalaali from "jalaali-js";
-import moment from "moment-jalaali";
-// import * as Jalaali from 'jalaali-js';
+
+
 
 const JalaliCalender = () => {
-  const [selectedDate, setSelectedDate] = useState("");
-  const [currentDate,setCurrentDate]=useState()
+  const persianType = false;
 
-  useEffect(() => {
-    const currentDate = moment(); // Get the current date
-    const formattedDate = currentDate.format("jYYYY/jMM/jDD");
-    setCurrentDate(formattedDate)
-    console.log(`formattedDate ${formattedDate}`)
-  }, []);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [currentDate, setCurrentDate] = useState();
+
+  //   useEffect(() => {
+  //     const currentDate = moment(); // Get the current date
+  //     const formattedDate = currentDate.format("jYYYY/jMM/jDD");
+  //     setCurrentDate(formattedDate)
+  //     console.log(`formattedDate ${formattedDate}`)
+  //   }, []);
 
   const formatJalaaliDate = (date) => {
     if (!date || typeof date !== "object" || date === null) {
@@ -30,7 +32,8 @@ const JalaliCalender = () => {
     return `${y}/${m}/${d}`;
   };
 
-  const handleDateChange = (date) => {
+  const handleDateChange = (date, dateString) => {
+    console.log(`dateString ${dateString}`);
     if (date) {
       const gDate = new Date(date);
       const jDate = Jalaali.toJalaali(
@@ -45,6 +48,13 @@ const JalaliCalender = () => {
       console.log("No date selected.");
     }
   };
+
+  const handleGDateChange = (date, dateString) => {
+    // setSelectedDate(date); // Update the state with the selected date
+    const gregorianDate = date.format("YYYY-MM-DD"); // Convert to Gregorian date
+    console.log("Selected Gregorian Date:", gregorianDate);
+  };
+
   const getDisplayDate = () => {
     if (selectedDate) {
       return formatJalaaliDate(selectedDate);
@@ -55,10 +65,10 @@ const JalaliCalender = () => {
     <div className="w-full flex flex-col gap-3 items-center">
       <h2 className="text-2xl">Date picker :</h2>
       <DatePicker
-        onChange={handleDateChange} // Handle date selection
+        onChange={persianType ? handleDateChange : handleGDateChange} // Handle date selection
         format="jYYYY/jMM/jDD"
-        locale="fa"
-        defaultValue={moment()}
+        locale={persianType ? "fa" : "en"}
+        // defaultValue={moment()}
       />
       <div>
         <p>Selected Date: {getDisplayDate()}</p>

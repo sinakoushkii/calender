@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.day-label-bar .day-label-bar-inner-ltr{
+    background-color: rgb(74, 74, 253);
+}
+.day-label-bar .day-label-bar-inner-rtl{
+    background-color: rgb(74, 74, 253);
+}
+.panel-gregorian, .panel-elevation{
+    border:1px solid blue;
+}
