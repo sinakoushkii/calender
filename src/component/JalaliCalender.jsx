@@ -7,29 +7,31 @@ import {
 } from "jalaali-react-date-picker";
 import Jalaali from "jalaali-js";
 
-
-
 const JalaliCalender = () => {
   const persianType = false;
 
   const [selectedDate, setSelectedDate] = useState("");
-  const [currentDate, setCurrentDate] = useState();
-
-  //   useEffect(() => {
-  //     const currentDate = moment(); // Get the current date
-  //     const formattedDate = currentDate.format("jYYYY/jMM/jDD");
-  //     setCurrentDate(formattedDate)
-  //     console.log(`formattedDate ${formattedDate}`)
-  //   }, []);
+  const [currentDate, setCurrentDate] = useState("");
 
   const formatJalaaliDate = (date) => {
     if (!date || typeof date !== "object" || date === null) {
       return "Invalid date";
     }
-    const y = date.jy;
-    const m = date.jm < 10 ? `0${date.jm}` : date.jm;
-    const d = date.jd < 10 ? `0${date.jd}` : date.jd;
-    return `${y}/${m}/${d}`;
+    if (persianType) {
+      const y = date.jy;
+      const m = date.jm < 10 ? `0${date.jm}` : date.jm;
+      const d = date.jd < 10 ? `0${date.jd}` : date.jd;
+      return `${y}/${m}/${d}`;
+    }
+  };
+  const formatGregorianDate = (date) => {
+    if (!date || typeof date !== "object" || date === null) {
+      return "Invalid date";
+    }
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
   };
 
   const handleDateChange = (date, dateString) => {
@@ -48,30 +50,39 @@ const JalaliCalender = () => {
       console.log("No date selected.");
     }
   };
-
   const handleGDateChange = (date, dateString) => {
-    // setSelectedDate(date); // Update the state with the selected date
-    const gregorianDate = date.format("YYYY-MM-DD"); // Convert to Gregorian date
-    console.log("Selected Gregorian Date:", gregorianDate);
+    console.log(`dateString ${dateString}`);
+    if (date) {
+      const gDate = new Date(date);
+      console.log("Gregorian Date:", gDate);
+      console.log("Formatted Date:", formatGregorianDate(gDate));
+      setSelectedDate(formatGregorianDate(gDate))
+    } else {
+      console.log("No date selected.");
+    }
   };
 
   const getDisplayDate = () => {
-    if (selectedDate) {
+    if (selectedDate && persianType) {
       return formatJalaaliDate(selectedDate);
+    }else if(selectedDate && persianType === false){
+        return formatGregorianDate(selectedDate)
+    }else{
+        return "No date selected.";
     }
-    return "No date selected.";
+    
   };
   return (
     <div className="w-full flex flex-col gap-3 items-center">
       <h2 className="text-2xl">Date picker :</h2>
       <DatePicker
         onChange={persianType ? handleDateChange : handleGDateChange} // Handle date selection
-        format="jYYYY/jMM/jDD"
+        // format={persianType && "jYYYY/jMM/jDD"}
         locale={persianType ? "fa" : "en"}
         // defaultValue={moment()}
       />
       <div>
-        <p>Selected Date: {getDisplayDate()}</p>
+        <p>Selected Date: {persianType?getDisplayDate():selectedDate}</p>
         <p>Current Date: {currentDate}</p>
       </div>
       <h2 className="text-2xl">Range picker :</h2>
